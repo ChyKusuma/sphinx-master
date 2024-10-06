@@ -1,3 +1,5 @@
+SPHINX IMPLEMENTATION PROPOSAL (SIP-0002)
+
 AES256-GCM mode
 
 Confidentiality & Integrity (Authenticated Encryption)

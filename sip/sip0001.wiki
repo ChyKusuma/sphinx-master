@@ -1,4 +1,4 @@
-SPHINX IMPLEEMENTATION PROPOSAL (SIP-0001)
+SPHINX IMPLEMENTATION PROPOSAL (SIP-0001)
 
 Summary
 As quantum computing technology continues to advance, the cryptographic systems that underpin our digital security are at risk. Current signature schemes based on discrete logarithms, such as ECDSA (Elliptic Curve Digital Signature Algorithm), and prime integers like RSA (Rivest-Shamir-Adleman), are vulnerable to quantum attacks due to the potential of algorithms like Shor's algorithm, which can efficiently factor large numbers and compute discrete logarithms. This vulnerability poses a significant threat to data integrity and security across various applications, including financial transactions, secure communications, and digital identities. As a result, there is an urgent need to transition to post-quantum cryptographic schemes, such as SPHINCS+, which are designed to withstand quantum attacks and ensure the future security of digital signatures.
