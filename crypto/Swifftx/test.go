@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	// Adjust the import path based on your Go module path
+	// Adjust the import path as necessary
 )
 
 func main() {
