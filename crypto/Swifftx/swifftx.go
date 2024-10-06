@@ -1,11 +1,11 @@
-// swifftx.go
 package swifftx
 
 /*
-#cgo CFLAGS: -I.   // Include path for header files
-#cgo LDFLAGS: -L. -lSHA3  // Link against the SHA3 library (make sure you have it compiled)
+#cgo CFLAGS: -I.
+#cgo LDFLAGS: -L. -lSHA3
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>  // Include for sprintf
 #include "SHA3.h"
 
 // Function to hash input message using SWIFFTX
@@ -27,7 +27,7 @@ import (
 	"unsafe"
 )
 
-func Hash(input string) (string, error) {
+func SWIFFTXHash(input string) (string, error) {
 	length := len(input)
 	output := make([]byte, 128) // 64 bytes = 512 bits, each byte represented by 2 hex chars
 
