@@ -6,7 +6,7 @@ As quantum computing technology continues to advance, the cryptographic systems 
 SPHINCS+
 the world's first "stateless" digital signature scheme, having won the NIST signature scheme competition  https://csrc.nist.gov/pubs/fips/205/ipd for post-quantum cryptography. In contrast, XMSS is a "stateful" digital signature scheme. Understanding the differences between these two types of digital signatures is essential for evaluating their operational characteristics and security implications.
 
-#Stateless Digital Signatures
+Stateless Digital Signatures
 Definition: Stateless digital signature schemes do not require the signer to maintain any internal state between the creation of multiple signatures. Each signature can be generated independently using the same signing key without the risk of compromising previous signatures.
 
 How Stateless Signatures Work:
@@ -15,7 +15,7 @@ How Stateless Signatures Work:
 3. Verification: The verifier uses the public key to verify the signature against the message.
 4. The signer can use the same private key for multiple signatures without maintaining any record of previously signed messages. While stateless signatures are easy to implement and use, they may be vulnerable to future quantum attacks.
 
-#Stateful Digital Signatures
+Stateful Digital Signatures
 1. Definition: Stateful digital signature schemes require the signer to keep track of the state of the signing process. This means the signer must carefully manage which keys or elements have been used for signing to ensure security.
 Example: XMSS (eXtended Merkle Signature Scheme).
 
