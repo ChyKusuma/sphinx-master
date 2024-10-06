@@ -27,7 +27,7 @@ import (
 
 	"github.com/kasperdi/SPHINCSPLUS-golang/parameters"
 	"github.com/kasperdi/SPHINCSPLUS-golang/sphincs"
-	"github.com/sphinx-core/sphinx-master/core/sign"
+	"github.com/sphinx-core/sphinx-master" // Updated import path
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
@@ -37,10 +37,10 @@ type KeyManager interface {
 	GenerateKeys(params *parameters.Parameters) (*sphincs.SPHINCS_SK, *sphincs.SPHINCS_PK)
 
 	// SignMessage signs a given message using the secret key, returns the signature and the Merkle tree root node
-	SignMessage(params *parameters.Parameters, message []byte, sk *sphincs.SPHINCS_SK) (*sphincs.SPHINCS_SIG, *sign.HashTreeNode, error)
+	SignMessage(params *parameters.Parameters, message []byte, sk *sphincs.SPHINCS_SK) (*sphincs.SPHINCS_SIG, *sphinx.HashTreeNode, error)
 
 	// VerifySignature checks if a signature is valid for a given message and public key, using the Merkle tree root node
-	VerifySignature(params *parameters.Parameters, message []byte, sig *sphincs.SPHINCS_SIG, pk *sphincs.SPHINCS_PK, merkleRoot *sign.HashTreeNode) bool
+	VerifySignature(params *parameters.Parameters, message []byte, sig *sphincs.SPHINCS_SIG, pk *sphincs.SPHINCS_PK, merkleRoot *sphinx.HashTreeNode) bool
 
 	// SerializeSK converts a secret key to a byte slice
 	SerializeSK(sk *sphincs.SPHINCS_SK) ([]byte, error)
@@ -77,7 +77,7 @@ func (sm *SphincsManager) GenerateKeys(params *parameters.Parameters) (*sphincs.
 }
 
 // SignMessage signs a given message using the secret key
-func (sm *SphincsManager) SignMessage(params *parameters.Parameters, message []byte, sk *sphincs.SPHINCS_SK) (*sphincs.SPHINCS_SIG, *sign.HashTreeNode, error) {
+func (sm *SphincsManager) SignMessage(params *parameters.Parameters, message []byte, sk *sphincs.SPHINCS_SK) (*sphincs.SPHINCS_SIG, *sphinx.HashTreeNode, error) {
 	// Generate the SPHINCS+ signature for the given message using the secret key
 	sig := sphincs.Spx_sign(params, message, sk)
 
@@ -112,14 +112,14 @@ func (sm *SphincsManager) SignMessage(params *parameters.Parameters, message []b
 	}
 
 	// Save the leaf nodes (signature parts) into LevelDB in batch mode for performance efficiency
-	if err := sign.SaveLeavesBatchToDB(sm.db, sigParts); err != nil {
+	if err := sphinx.SaveLeavesBatchToDB(sm.db, sigParts); err != nil {
 		// Return an error if saving the leaves to LevelDB fails
 		return nil, nil, err
 	}
 
 	// Optionally prune old leaves from the database to prevent the storage from growing indefinitely
 	// In this example, we keep the last 10 leaves and prune older ones
-	if err := sign.PruneOldLeaves(sm.db, 10); err != nil {
+	if err := sphinx.PruneOldLeaves(sm.db, 10); err != nil {
 		// Return an error if the pruning operation fails
 		return nil, nil, err
 	}
@@ -129,7 +129,7 @@ func (sm *SphincsManager) SignMessage(params *parameters.Parameters, message []b
 }
 
 // VerifySignature verifies if a signature is valid for a given message and public key
-func (sm *SphincsManager) VerifySignature(params *parameters.Parameters, message []byte, sig *sphincs.SPHINCS_SIG, pk *sphincs.SPHINCS_PK, merkleRoot *sign.HashTreeNode) bool {
+func (sm *SphincsManager) VerifySignature(params *parameters.Parameters, message []byte, sig *sphincs.SPHINCS_SIG, pk *sphincs.SPHINCS_PK, merkleRoot *sphinx.HashTreeNode) bool {
 	// Verify the SPHINCS+ signature using the message, signature, public key, and parameters
 	isValid := sphincs.Spx_verify(params, message, sig, pk)
 	if !isValid {
@@ -200,22 +200,4 @@ func (sm *SphincsManager) SerializeSignature(sig *sphincs.SPHINCS_SIG) ([]byte, 
 // DeserializeSignature deserializes a byte slice into a signature (sig) using the provided parameters
 func (sm *SphincsManager) DeserializeSignature(params *parameters.Parameters, sigBytes []byte) (*sphincs.SPHINCS_SIG, error) {
 	return sphincs.DeserializeSignature(params, sigBytes) // Calls SPHINCS method to deserialize signature from bytes
-}
-
-// buildMerkleTreeFromSignature takes signature parts and builds a Merkle tree, returning the root node
-func buildMerkleTreeFromSignature(sigParts [][]byte) (*sign.HashTreeNode, error) {
-	// Create a slice to hold the leaf nodes of the Merkle tree
-	var leaves []*sign.HashTreeNode
-	for _, part := range sigParts {
-		// Create a new leaf node for each part of the signature
-		leaf := &sign.HashTreeNode{Hash: part} // Assuming HashTreeNode has a field called Hash
-		leaves = append(leaves, leaf)
-	}
-
-	// Build the Merkle tree from the leaf nodes and return the root
-	root, err := sign.BuildMerkleTree(leaves) // Calls the BuildMerkleTree function from the sign package
-	if err != nil {
-		return nil, err // Return an error if the tree building fails
-	}
-	return root, nil // Return the root of the Merkle tree
 }
