@@ -27,7 +27,7 @@ import (
 
 	"github.com/kasperdi/SPHINCSPLUS-golang/parameters"
 	"github.com/kasperdi/SPHINCSPLUS-golang/sphincs"
-	"github.com/sphinx-core/sphinx-master" // Updated import path
+	"github.com/sphinx-core/sphinx-master"
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
