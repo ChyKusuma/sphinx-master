@@ -1,4 +1,4 @@
-module sphinx-master
+module github.com/sphinx-core/sphinx-master
 
 go 1.23.0
 
