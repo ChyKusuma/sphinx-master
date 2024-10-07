@@ -26,8 +26,8 @@ import (
 	"fmt"
 	"log"
 
-	"sphinx-master/core/hashtree"
-	"sphinx-master/core/sign"
+	"github.com/username/sphinx-master/core/hashtree"
+	"github.com/username/sphinx-master/core/sign"
 
 	"github.com/kasperdi/SPHINCSPLUS-golang/parameters"
 	"github.com/syndtr/goleveldb/leveldb"
